@@ -14,12 +14,19 @@ use Illuminate\Support\Facades\Route;
  */
 
 Route::get('/', function () {
-    echo '1';
-    return view('welcome');
+    return redirect("/admin");
 });
 
-Route::get('/2', function () {
-    echo '2';
-    return view('welcome');
+Route::prefix('admin')
+        ->name('admin.')
+        ->group(function () {
+            Route::get('/', [App\Http\Controllers\Admin\AdminController::class, 'dashboard'])->name('home');
+            Route::get('dashboard', [App\Http\Controllers\Admin\AdminController::class, 'dashboard'])->name('dashboard');
+        });
+
+Route::prefix('api/v1')->group(function () {
+    Route::prefix('admin')->group(function () {
+        
+    });
 });
 
