@@ -49,4 +49,43 @@ class AdminController extends Controller {
     public function dashboard() {
         return view('admin.dashboard.dashboard');
     }
+
+    public function users_manage() {
+        return view('admin.users.manage');
+    }
+
+    public function users_create() {
+        return view('admin.users.create', [
+            'mode' => 'save',
+            'key' => '',
+        ]);
+    }
+
+    public function users_update() {
+        $key = isset($this->request->key) ? $this->request->key : '';
+        $inputs = $this->request->input();
+
+        return view('admin.users.create', [
+            'mode' => 'update',
+            'key' => $key,
+        ]);
+    }
+
+    public function leads_manage() {
+        $title = "Manage";
+
+        return view('admin.leads.manage', [
+            'mode' => 'update',
+            'title' => $title,
+        ]);
+    }
+
+    public function leads_total() {
+        $title = "Manage";
+
+        return view('admin.leads.manage', [
+            'mode' => 'update',
+            'title' => $title,
+        ]);
+    }
 }

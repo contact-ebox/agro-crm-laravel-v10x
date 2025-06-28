@@ -49,14 +49,7 @@
             @include('admin.layouts.navbar')
 
             <div class="page-wrapper">
-                @include('admin.layouts.page-header')
-
-                <!-- Page body -->
-                <div class="page-body">
-                    <div class="container-xl">
-                        @yield('content')
-                    </div>
-                </div>
+                @yield('content')                
 
                 <!-- Page Footer -->
                 @include('admin.layouts.footer')
@@ -71,6 +64,9 @@
         <script src="{{url('/')}}/assets/admin/layouts/js/tabler.min.js?1692870487" defer></script>
         <script src="{{url('/')}}/assets/admin/layouts/js/demo.min.js?1692870487" defer></script>
         <script src="{{url('/')}}/assets/admin/layouts/js/demo-theme.min.js?1692870487"></script>
+
+        <script src="{{url('/')}}/plugins/vue/vue.min.js" type="text/javascript"></script>
+        <script src="{{url('/')}}/assets/globals/js/globals.js" type="text/javascript"></script>
 
         <!--page lavel scripts-->
         @stack('scripts')             
