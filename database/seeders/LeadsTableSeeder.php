@@ -20,8 +20,8 @@ class LeadsTableSeeder extends Seeder {
                 'lead_email' => "lead{$i}@example.com",
                 'lead_phone' => rand(7000000000, 9999999999),
                 'lead_enquiry_for' => 'Service Consultation',
-                'lead_type' => 'Hot',
-                'lead_status' => 'Converted', // '',
+                'lead_type' => 'Warm',
+                'lead_status' => 'In Progress', // '',
                 'lead_given_date' => Carbon::now()->toDateString(),
                 'lead_user_id' => 'USR' . rand(100, 999),
                 'lead_create_date' => Carbon::now(),
@@ -29,5 +29,85 @@ class LeadsTableSeeder extends Seeder {
                 'lead_delete' => 'N',
             ]);
         }
+
+        for ($i = 1; $i <= 50; $i++) {
+            Leads::create([
+                'lead_id' => Str::uuid(),
+                'lead_email' => "lead{$i}@example.com",
+                'lead_phone' => rand(7000000000, 9999999999),
+                'lead_enquiry_for' => 'Harvester',
+                'lead_type' => 'Cold',
+                'lead_status' => 'Not Interested', // '',
+                'lead_given_date' => Carbon::now()->toDateString(),
+                'lead_user_id' => 'USR' . rand(100, 999),
+                'lead_create_date' => Carbon::now(),
+                'lead_update_date' => Carbon::now(),
+                'lead_delete' => 'N',
+            ]);
+        }
+
+//        for ($i = 1; $i <= 50; $i++) {
+//            Leads::create([
+//                'lead_id' => Str::uuid(),
+//                'lead_email' => "lead{$i}@example.com",
+//                'lead_phone' => rand(7000000000, 9999999999),
+//                'lead_enquiry_for' => 'Service Consultation',
+//                'lead_type' => 'Hot',
+//                'lead_status' => 'Converted', // '',
+//                'lead_given_date' => Carbon::now()->toDateString(),
+//                'lead_user_id' => 'USR' . rand(100, 999),
+//                'lead_create_date' => Carbon::now(),
+//                'lead_update_date' => Carbon::now(),
+//                'lead_delete' => 'N',
+//            ]);
+//        }
+//
+//        for ($i = 1; $i <= 50; $i++) {
+//            Leads::create([
+//                'lead_id' => Str::uuid(),
+//                'lead_email' => "lead{$i}@example.com",
+//                'lead_phone' => rand(7000000000, 9999999999),
+//                'lead_enquiry_for' => 'Harvester',
+//                'lead_type' => 'Warm',
+//                'lead_status' => 'Converted', // '',
+//                'lead_given_date' => Carbon::now()->toDateString(),
+//                'lead_user_id' => 'USR' . rand(100, 999),
+//                'lead_create_date' => Carbon::now(),
+//                'lead_update_date' => Carbon::now(),
+//                'lead_delete' => 'N',
+//            ]);
+//        }
+//
+//        for ($i = 1; $i <= 50; $i++) {
+//            Leads::create([
+//                'lead_id' => Str::uuid(),
+//                'lead_email' => "lead{$i}@example.com",
+//                'lead_phone' => rand(7000000000, 9999999999),
+//                'lead_enquiry_for' => 'Service Consultation',
+//                'lead_type' => 'Cold',
+//                'lead_status' => 'Converted', // '',
+//                'lead_given_date' => Carbon::now()->toDateString(),
+//                'lead_user_id' => 'USR' . rand(100, 999),
+//                'lead_create_date' => Carbon::now(),
+//                'lead_update_date' => Carbon::now(),
+//                'lead_delete' => 'N',
+//            ]);
+//        }
+//
+//        for ($i = 1; $i <= 50; $i++) {
+//            Leads::create([
+//                'lead_id' => Str::uuid(),
+//                'lead_email' => "lead{$i}@example.com",
+//                'lead_phone' => rand(7000000000, 9999999999),
+//                'lead_enquiry_for' => 'SHarvester',
+//                'lead_type' => 'Hot',
+//                'lead_status' => 'Converted', // '',
+//                'lead_given_date' => Carbon::now()->toDateString(),
+//                'lead_user_id' => 'USR' . rand(100, 999),
+//                'lead_create_date' => Carbon::now(),
+//                'lead_update_date' => Carbon::now(),
+//                'lead_delete' => 'N',
+//            ]);
+//        }
     }
 }

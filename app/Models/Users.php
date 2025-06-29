@@ -33,7 +33,7 @@ use App\Models\AppGlobals;
 /**
  * Description of Users
  *
- * @author Pranata
+ * @author Pranata  
  * 
  * @property int         $user_indx int(11) UNIQUE KEY AUTO_INCREMENT,
  * @property string     $user_key varchar(60) PRIMARY KEY,

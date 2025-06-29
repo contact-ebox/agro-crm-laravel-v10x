@@ -38,7 +38,10 @@ var vueLeads = new Vue({
         pagination: [],
         //--------       
         search: '',
+        type: '',
         status: '',
+        assigned_user: '',
+        date_range: '',
         selected_key: "",
         selected_row: [],
     },
@@ -58,7 +61,28 @@ var vueLeads = new Vue({
             $('#mdl_delete').modal('show');
         },
     },
-    watch: {},
+    watch: {
+        'search': (value) => {
+            console.log(value);
+            vueLeads.$data.page = 1;
+            leads.get_data();
+        },
+        'status': (value) => {
+            console.log(value);
+            vueLeads.$data.page = 1;
+            leads.get_data();
+        },
+        'type': (value) => {
+            console.log(value);
+            vueLeads.$data.page = 1;
+            leads.get_data();
+        },
+        'assigned_user': (value) => {
+            console.log(value);
+            vueLeads.$data.page = 1;
+            leads.get_data();
+        },
+    },
 });
 
 window.leads = {
@@ -176,7 +200,10 @@ window.leads = {
                 page: vueLeads.$data.page,
                 //------------------------------
                 search: vueLeads.$data.search,
+                type: vueLeads.$data.type,
                 status: vueLeads.$data.status,
+                date_range: vueLeads.$data.date_range,
+                assigned_user: vueLeads.$data.assigned_user,
                 //type: '3',
                 sort_by: vueLeads.$data.sort_by,
                 sort_order: vueLeads.$data.sort_order,
@@ -186,9 +213,9 @@ window.leads = {
                 if (resp['msg'] == 'success') {
                     vueLeads.$data.rows = resp.data;
 
-                    vueLeads.$data.count = resp.pagination.count;
-                    vueLeads.$data.page = resp.pagination.page;
-                    vueLeads.$data.pages = resp.pagination.pages;
+                    vueLeads.$data.count = parseInt(resp.pagination.count);
+                    vueLeads.$data.page = parseInt(resp.pagination.page);
+                    vueLeads.$data.pages = parseInt(resp.pagination.pages);
 
                     setTimeout(function () {
                         self.pagination.init();

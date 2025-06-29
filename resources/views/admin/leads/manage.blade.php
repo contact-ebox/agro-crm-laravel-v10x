@@ -96,6 +96,36 @@ globals.modules.attach(leads);
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
+                        <div class="d-flex row ">
+                            <div class="col-md-2">
+                                <input type="text" id="search" name="search" v-model="search" class="form-control" placeholder="Search" />
+                            </div>
+                            <div class="col-md-2">
+                                <select id="type" name="type" v-model="type"  class="form-select">
+                                    <option value="">Select Type</option>
+                                    <option value="Hot">Hot</option>
+                                    <option value="Warm">Warm</option>
+                                    <option value="Cold">Cold</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <select id="status" name="status" v-model="status" class="form-select">
+                                    <option value="">Select Status</option>
+                                    <option value="In Progress">In Progress</option>
+                                    <option value="Not Interested">Not Interested</option>
+                                    <option value="Converted">Converted</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <select id="assigned_user" name="assigned_user" v-model="assigned_user" class="form-select">
+                                    <option value="">Select assigned user</option>
+                                    <option value="CRE">CRE</option>
+                                    <option value="DSE">DSE</option>                                    
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
                         <div class="table-responsive" style="min-height: 300px;">
                             <table class="table table-vcenter table-mobile-md card-table">
                                 <thead>
@@ -124,10 +154,10 @@ globals.modules.attach(leads);
                                             <div>@{{row.phone}}</div>
                                             <!--<div class="text-muted">Business Development</div>-->
                                         </td>
-                                        <td class="text-muted" data-label="Enquiry For">@{{row.email}}</td>
-                                        <td class="text-muted" data-label="Lead Given">@{{row.enquiry_for}}</td>
-                                        <td class="text-muted" data-label="Lead Type">DSC1</td>
-                                        <td class="text-muted" data-label="Lead Status">@{{row.type}}</td>
+                                        <td class="text-muted" data-label="Enquiry For">@{{row.enquiry_for}}</td>
+                                        <td class="text-muted" data-label="Lead Given">@{{row.assigned_user}}</td>
+                                        <td class="text-muted" data-label="Lead Type">@{{row.type}}</td>
+                                        <td class="text-muted" data-label="Lead Status">@{{row.status}}</td>
                                         <td class="text-muted" data-label="Create Date">@{{row.create_date2}}</td>
                                         <td>
                                             <div class="btn-list flex-nowrap">                                                

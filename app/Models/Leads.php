@@ -38,6 +38,7 @@ use App\Models\Users;
  * 
  * @property int     $lead_indx                 Auto-incremented unique index
  * @property string $lead_id                    Primary key (varchar 60)
+ * @property string $lead_name              VARCHAR(100) DEFAULT NULL,
  * @property string $lead_email              Email of the lead
  * @property int     $lead_phone              Phone number
  * @property string $lead_enquiry_for      What the enquiry is for
@@ -45,6 +46,7 @@ use App\Models\Users;
  * @property string $lead_status             Status of the lead
  * @property string $lead_given_date      Date given (as string)
  * @property string $lead_user_id           Related user id
+ * @property string $lead_assigned_user varchar(60) NOT NULL,
  * @property string $lead_create_date     Created timestamp
  * @property string $lead_update_date    Updated timestamp
  * @property string $lead_delete             Soft delete flag ('Y' or 'N')
@@ -109,18 +111,18 @@ class Leads extends Model {
             $index = str_replace('lead_', '', $key);
 
             if ($index !== 'delete') {
-                $data[ $index ] = $value;
+                $data[$index] = $value;
             }
         }
 
-        $data[ 'user' ] = [];
+        $data['user'] = [];
 
         if ($this->users != null) {
-            $data[ 'user' ] = $this->users->get_params();
+            $data['user'] = $this->users->get_params();
         }
 
-        $data[ 'create_date2' ] = AppGlobals::getDate($this->lead_create_date);
-        $data[ 'update_date2' ] = AppGlobals::getDate($this->lead_update_date);
+        $data['create_date2'] = AppGlobals::getDate($this->lead_create_date);
+        $data['update_date2'] = AppGlobals::getDate($this->lead_update_date);
 
         return $data;
     }

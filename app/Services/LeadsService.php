@@ -51,10 +51,10 @@ class LeadsService {
         $this->columns = Schema::getColumnListing($this->model->getTable());
         $this->columns = array_diff($this->columns, ['lead_indx', 'lead_id', 'lead_create_date', 'lead_update_date', 'lead_delete']);
 
-        $this->response[ 'msg' ] = 'error';
-        $this->response[ 'code' ] = '100';
-        $this->response[ 'data' ] = 'error';
-        $this->response[ 'inputs' ] = $this->request->input();
+        $this->response['msg'] = 'error';
+        $this->response['code'] = '100';
+        $this->response['data'] = 'error';
+        $this->response['inputs'] = $this->request->input();
     }
 
     /**
@@ -69,21 +69,21 @@ class LeadsService {
         foreach ($this->columns as $column) {
             $index = str_replace('lead_', "", $column);
             if ($index != 'indx')
-                $this->model->{$column} = isset($inputs[ $index ]) ? $inputs[ $index ] : null;
+                $this->model->{$column} = isset($inputs[$index]) ? $inputs[$index] : null;
         }
 
         $this->model->lead_id = "LED" . AppGlobals::autoKey($this->model);
-        $this->model->lead_status = isset($inputs[ 'status' ]) ? $inputs[ 'status' ] : 'new';
+        $this->model->lead_status = isset($inputs['status']) ? $inputs['status'] : 'new';
 
         if ($this->model->save()) {
             $this->model->refresh();
-            $this->response[ 'msg' ] = 'success';
-            $this->response[ 'code' ] = "0";
-            $this->response[ 'data' ] = $this->model->get_params();
+            $this->response['msg'] = 'success';
+            $this->response['code'] = "0";
+            $this->response['data'] = $this->model->get_params();
         } else {
-            $this->response[ 'msg' ] = 'error';
-            $this->response[ 'code' ] = "2";
-            $this->response[ 'data' ] = "error";
+            $this->response['msg'] = 'error';
+            $this->response['code'] = "2";
+            $this->response['data'] = "error";
         }
 
         return $this->response;
@@ -93,36 +93,36 @@ class LeadsService {
         $key = isset($this->request->key) ? $this->request->key : '';
 
         if ($key == '') {
-            $this->response[ 'msg' ] = "error";
-            $this->response[ 'code' ] = 1;
-            $this->response[ 'data' ] = "Invalid key.";
+            $this->response['msg'] = "error";
+            $this->response['code'] = 1;
+            $this->response['data'] = "Invalid key.";
             return $this->response;
         }
 
         $this->model = Leads::find($key);
 
         if ($this->model == null) {
-            $this->response[ 'msg' ] = "error";
-            $this->response[ 'code' ] = 2;
-            $this->response[ 'data' ] = "Data not found.";
+            $this->response['msg'] = "error";
+            $this->response['code'] = 2;
+            $this->response['data'] = "Data not found.";
             return $this->response;
         }
 
         foreach ($this->columns as $column) {
             $index = str_replace('lead_', "", $column);
             if ($index != 'indx')
-                $this->model->{$column} = isset($inputs[ $index ]) ? $inputs[ $index ] : $this->model->{$column};
+                $this->model->{$column} = isset($inputs[$index]) ? $inputs[$index] : $this->model->{$column};
         }
 
         if ($this->model->update()) {
             $this->model->refresh();
-            $this->response[ 'msg' ] = 'success';
-            $this->response[ 'code' ] = "0";
-            $this->response[ 'data' ] = $this->model->get_params();
+            $this->response['msg'] = 'success';
+            $this->response['code'] = "0";
+            $this->response['data'] = $this->model->get_params();
         } else {
-            $this->response[ 'msg' ] = 'error';
-            $this->response[ 'code' ] = "2";
-            $this->response[ 'data' ] = "error";
+            $this->response['msg'] = 'error';
+            $this->response['code'] = "2";
+            $this->response['data'] = "error";
         }
 
         return $this->response;
@@ -136,13 +136,13 @@ class LeadsService {
 
         if (!empty($this->model) && $this->model !== null) {
             $data = $this->model->get_params();
-            $this->response[ 'msg' ] = 'success';
-            $this->response[ 'code' ] = '0';
-            $this->response[ 'data' ] = $data;
+            $this->response['msg'] = 'success';
+            $this->response['code'] = '0';
+            $this->response['data'] = $data;
         } else {
-            $this->response[ 'msg' ] = 'error';
-            $this->response[ 'code' ] = '1';
-            $this->response[ 'data' ] = 'No Records Found';
+            $this->response['msg'] = 'error';
+            $this->response['code'] = '1';
+            $this->response['data'] = 'No Records Found';
         }
 
         return $this->response;
@@ -151,24 +151,29 @@ class LeadsService {
     public function search($inputs) {
         $data = [];
 
-        $results_per_page = isset($inputs[ 'results_per_page' ]) ? $inputs[ 'results_per_page' ] : 10;
-        $page = (isset($inputs[ 'page' ]) && $inputs[ 'page' ] >= 1) ? $inputs[ 'page' ] : 1;
+        $results_per_page = isset($inputs['results_per_page']) ? $inputs['results_per_page'] : 10;
+        $page = (isset($inputs['page']) && $inputs['page'] >= 1) ? $inputs['page'] : 1;
         $offset = ($page - 1) * $results_per_page;
 
-        $sort_by = isset($inputs[ 'sort_by' ]) ? "lead_" . $inputs[ 'sort_by' ] : 'lead_indx';
-        $sort_order = isset($inputs[ 'sort_order' ]) ? $inputs[ 'sort_order' ] : 'DESC';
+        $sort_by = isset($inputs['sort_by']) ? "lead_" . $inputs['sort_by'] : 'lead_indx';
+        $sort_order = isset($inputs['sort_order']) ? $inputs['sort_order'] : 'DESC';
 
-        $search = isset($inputs[ 'search' ]) ? $inputs[ 'search' ] : '';
-        $status = isset($inputs[ 'status' ]) ? $inputs[ 'status' ] : '';
-        $type = isset($inputs[ 'type' ]) ? $inputs[ 'type' ] : '';
-        $key = isset($inputs[ 'key' ]) ? $inputs[ 'key' ] : '';
+        $search = isset($inputs['search']) ? $inputs['search'] : '';
+        $status = isset($inputs['status']) ? $inputs['status'] : '';
+        $type = isset($inputs['type']) ? $inputs['type'] : '';
+        $assigned_user = isset($inputs['assigned_user']) ? $inputs['assigned_user'] : '';
+        $key = isset($inputs['key']) ? $inputs['key'] : '';
 
         $query = Leads::select('*')->where('lead_delete', '=', 'N');
 
         if ($search !== '') {
             $query->where(function ($builder) use ($search) {
                 $builder->where("lead_id", 'LIKE', "%{$search}%");
-                $builder->orWhere("lead_email", 'LIKE', "%{$search}%");
+                $builder->orWhere("lead_name", 'LIKE', "%{$search}%");
+                $builder->orWhere("lead_phone", 'LIKE', "%{$search}%");
+                $builder->orWhere("lead_type", 'LIKE', "%{$search}%");
+                $builder->orWhere("lead_status", 'LIKE', "%{$search}%");
+                $builder->orWhere("lead_enquiry_for", 'LIKE', "%{$search}%");
             });
         }
 
@@ -182,6 +187,10 @@ class LeadsService {
 
         if ($key !== '') {
             $query->where('lead_id', 'LIKE', "{$key}");
+        }
+
+        if ($assigned_user !== '') {
+            $query->where('lead_assigned_user', 'LIKE', "{$assigned_user}");
         }
 
         $totalResults = $query->count();
@@ -205,10 +214,10 @@ class LeadsService {
             'offset' => $offset,
         ];
 
-        $this->response[ 'msg' ] = 'success';
-        $this->response[ 'code' ] = "0";
-        $this->response[ 'data' ] = $data;
-        $this->response[ 'pagination' ] = $pagination;
+        $this->response['msg'] = 'success';
+        $this->response['code'] = "0";
+        $this->response['data'] = $data;
+        $this->response['pagination'] = $pagination;
 
         return $this->response;
     }
@@ -217,13 +226,13 @@ class LeadsService {
         $key = isset($this->request->key) ? $this->request->key : '';
 
         if ($count = Leads::where('lead_id', '=', $key)->update(['lead_delete' => 'Y'])) {
-            $this->response[ 'msg' ] = 'success';
-            $this->response[ 'code' ] = '0';
-            $this->response[ 'data' ] = $count;
+            $this->response['msg'] = 'success';
+            $this->response['code'] = '0';
+            $this->response['data'] = $count;
         } else {
-            $this->response[ 'msg' ] = 'error';
-            $this->response[ 'code' ] = '2';
-            $this->response[ 'data' ] = 'error';
+            $this->response['msg'] = 'error';
+            $this->response['code'] = '2';
+            $this->response['data'] = 'error';
         }
 
         return $this->response;
