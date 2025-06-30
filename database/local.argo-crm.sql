@@ -35,6 +35,7 @@ CREATE TABLE tbl_leads (
     lead_enquiry_for VARCHAR(255) DEFAULT NULL,
     lead_type VARCHAR(100) DEFAULT NULL,
     lead_status VARCHAR(100) DEFAULT NULL,
+    lead_address text DEFAULT NULL,
     lead_given_date VARCHAR(100) DEFAULT NULL,
     lead_user_id VARCHAR(60) DEFAULT NULL,
     lead_assigned_user VARCHAR(60) DEFAULT NULL,
@@ -50,7 +51,7 @@ INSERT INTO tbl_users (user_indx, user_key, user_fname, user_mname, user_lname, 
 
 SELECT * FROM tbl_leads tl  ORDER BY tl.lead_indx DESC;
 
-UPDATE tbl_leads tl SET tl.lead_assigned_user='DSE' WHERE tl.lead_indx BETWEEN 301 AND 500;
+-- UPDATE tbl_leads tl SET tl.lead_assigned_user='DSE' WHERE tl.lead_indx BETWEEN 301 AND 500;
 
 
 

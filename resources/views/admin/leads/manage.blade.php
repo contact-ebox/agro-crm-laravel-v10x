@@ -29,10 +29,29 @@
 
 @push('css')
 <link href="{{url('')}}/plugins/jquery-easyui/themes/gray/easyui.css" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 <link href="{{url('')}}/plugins/jquery-easyui/themes/icon.css" rel="stylesheet" type="text/css"/>
+
+<style>
+    .date-range-picker .clear{
+        position: relative;
+        right: 24px;
+        top: 2px;
+        font-size: 20px;
+        font-weight: 500;
+        line-height: 36px;
+        cursor: pointer;
+    }
+    .date-range-picker .clear:hover{
+        font-weight: 600;
+
+    }
+</style>
 @endpush
 
 @push('scripts')
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <script src="{{url('')}}/plugins/jquery-easyui/jquery.easyui.min.js" type="text/javascript"></script>
 <script src="{{url('')}}/plugins/jquery-easyui/jquery.easyui.mobile.js" type="text/javascript"></script>
 <script src="{{url('/')}}/assets/admin/leads/js/manage.js?v={{time()}}" type="text/javascript"></script>
@@ -41,6 +60,7 @@
 const  mode = '<?php echo isset($mode) ? $mode : 'save'; ?>';
 const  key = '<?php echo isset($key) ? $key : ''; ?>';
 const  module = '<?php echo (isset($module)) ? $module : 'admin'; ?>';
+const  title = '<?php echo (isset($title)) ? $title : ''; ?>';
 
 globals.modules.attach(leads);
 </script>
@@ -55,15 +75,12 @@ globals.modules.attach(leads);
                 <div class="col">
                     <!-- Page pre-title -->
                     <div class="page-pretitle">Manage</div>
-                    <h2 class="page-title">Admin Users</h2>
+                    <h2 class="page-title">{{ (isset($title)) ? $title : '' }}</h2>
                 </div>
                 <!-- Page title actions -->
                 <div class="col-auto ms-auto d-print-none">
-                    <div class="btn-list">
-                        <span class="d-none d-sm-inline">
-                            <a href="#" class="btn">New view</a>
-                        </span>
-                        <a href="{{route('admin.users.create')}}" class="btn btn-primary d-none d-sm-inline-block">
+                    <div class="btn-list">                      
+                        <a id="ancr_show_leads_form" href="{{route('admin.leads.create')}}"  class="btn btn-primary d-sm-inline-block" style="cursor: pointer;">
                             <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
                                  stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -71,18 +88,8 @@ globals.modules.attach(leads);
                                 <path d="M12 5l0 14" />
                                 <path d="M5 12l14 0" /> 
                             </svg>
-                            Create a Admin User
-                        </a>
-                        <a href="#" class="btn btn-primary d-sm-none btn-icon" data-bs-toggle="modal"
-                           data-bs-target="#modal-report" aria-label="Create new report">
-                            <!-- Download SVG icon from http://tabler-icons.io/i/plus -->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
-                                 stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path d="M12 5l0 14" />
-                                <path d="M5 12l14 0" />
-                            </svg>
-                        </a>
+                            Create a Lead
+                        </a>                         
                     </div>
                 </div>
             </div>
@@ -108,7 +115,7 @@ globals.modules.attach(leads);
                                     <option value="Cold">Cold</option>
                                 </select>
                             </div>
-                            <div class="col-md-2">
+                            <div v-if=" (title != 'Converted') && (title != 'Not Interested') " class="col-md-2">
                                 <select id="status" name="status" v-model="status" class="form-select">
                                     <option value="">Select Status</option>
                                     <option value="In Progress">In Progress</option>
@@ -122,6 +129,10 @@ globals.modules.attach(leads);
                                     <option value="CRE">CRE</option>
                                     <option value="DSE">DSE</option>                                    
                                 </select>
+                            </div>
+                            <div class="col-md-3 d-inline-flex date-range-picker">
+                                <span id="date_range" class="form-control">@{{ (date_range.length>0) ? date_range : 'Select a date range' }}</span>
+                                <span v-if="(date_range.length>0)" class="text-danger clear" v-on:click="clear_daterange()">X</span>
                             </div>
                         </div>
                     </div>
@@ -158,7 +169,7 @@ globals.modules.attach(leads);
                                         <td class="text-muted" data-label="Lead Given">@{{row.assigned_user}}</td>
                                         <td class="text-muted" data-label="Lead Type">@{{row.type}}</td>
                                         <td class="text-muted" data-label="Lead Status">@{{row.status}}</td>
-                                        <td class="text-muted" data-label="Create Date">@{{row.create_date2}}</td>
+                                        <td class="text-muted" data-label="Create Date">@{{row.given_date2}}</td>
                                         <td>
                                             <div class="btn-list flex-nowrap">                                                
                                                 <div class="dropdown">
@@ -178,6 +189,25 @@ globals.modules.attach(leads);
                     <div class="card-footer d-flex align-items-center">
                         <ul class="pagination mb-0"></ul>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal modal-blur fade rounded" id="mdl_leads_create" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Large modal</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci animi beatae delectus deleniti dolorem eveniet facere fuga
+                    iste nemo nesciunt nihil odio perspiciatis, quia quis reprehenderit sit tempora totam unde.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn me-auto" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
                 </div>
             </div>
         </div>

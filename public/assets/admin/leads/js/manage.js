@@ -42,12 +42,15 @@ var vueLeads = new Vue({
         status: '',
         assigned_user: '',
         date_range: '',
+        start_date: '',
+        end_date: '',
         selected_key: "",
         selected_row: [],
+        title: '',
     },
     methods: {
         update(indx) {
-            window.open(base_url + `/admin/leads/${this.rows[indx].key}/update`, "_blank", );
+            window.open(base_url + `/admin/leads/${this.rows[indx].id}/update`, "_blank", );
         },
         view(indx) {
             window.open(SITE_URL + `/admin/leads/${this.rows[indx].key}/update`, "_blank", );
@@ -59,6 +62,14 @@ var vueLeads = new Vue({
             this.selected_key = row.key;
 
             $('#mdl_delete').modal('show');
+        },
+        clear_daterange() {
+            this.date_range = "";
+            this.start_date = "";
+            this.end_date = "";
+
+            vueLeads.$data.page = 1;
+            leads.get_data();
         },
     },
     watch: {
@@ -94,6 +105,16 @@ window.leads = {
     },
     onStart() {
         var self = leads;
+
+        vueLeads.$data.title = title;
+
+        if (title == 'Converted') {
+            vueLeads.$data.status = "Converted";
+        }
+
+        if (title == 'Not Interested') {
+            vueLeads.$data.status = "Not Interested";
+        }
 
         self.onLoad.init_menu();
         self.get_data();
@@ -180,6 +201,21 @@ window.leads = {
             }
         });
 
+        $('#date_range').daterangepicker({
+            opens: 'left'
+        }, function (start, end, label) {
+            console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+        });
+        $('#date_range').on('apply.daterangepicker', (ev, picker) => {
+            console.log("You chose: " + picker.startDate.format('YYYY-MM-DD') + ' to ' + picker.endDate.format('YYYY-MM-DD'));
+            vueLeads.$data.date_range = picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD');
+            vueLeads.$data.start_date = picker.startDate.format('YYYY-MM-DD');
+            vueLeads.$data.end_date = picker.endDate.format('YYYY-MM-DD');
+
+            vueLeads.$data.page = 1;
+            leads.get_data();
+        });
+
         $('#mdl_delete').on('hide.bs.modal', (e) => {
             vueLeads.$data.selected_key = '';
             vueLeads.$data.selected_row = '';
@@ -204,6 +240,8 @@ window.leads = {
                 status: vueLeads.$data.status,
                 date_range: vueLeads.$data.date_range,
                 assigned_user: vueLeads.$data.assigned_user,
+                start_date: vueLeads.$data.start_date,
+                end_date: vueLeads.$data.end_date,
                 //type: '3',
                 sort_by: vueLeads.$data.sort_by,
                 sort_order: vueLeads.$data.sort_order,

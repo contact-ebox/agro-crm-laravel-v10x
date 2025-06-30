@@ -44,6 +44,7 @@ use App\Models\Users;
  * @property string $lead_enquiry_for      What the enquiry is for
  * @property string $lead_type                Type of lead
  * @property string $lead_status             Status of the lead
+ * @property string $lead_address text DEFAULT NULL,
  * @property string $lead_given_date      Date given (as string)
  * @property string $lead_user_id           Related user id
  * @property string $lead_assigned_user varchar(60) NOT NULL,
@@ -121,6 +122,7 @@ class Leads extends Model {
             $data['user'] = $this->users->get_params();
         }
 
+        $data['given_date2'] = AppGlobals::getDate($this->lead_given_date, 'j M Y');
         $data['create_date2'] = AppGlobals::getDate($this->lead_create_date);
         $data['update_date2'] = AppGlobals::getDate($this->lead_update_date);
 

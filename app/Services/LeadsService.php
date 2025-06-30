@@ -66,15 +66,91 @@ class LeadsService {
     }
 
     public function create($inputs) {
+        // Sanitize inputs
+        foreach ($inputs as $key => $value) {
+            if (is_string($value)) {
+                $inputs[$key] = trim(strip_tags($value));
+            }
+        }
+
+        // Regex
+        $preg_name = '/^[a-zA-Z ]+$/';
+        $preg_numeric = '/^[0-9]+$/';
+        $preg_email = '/^[^\s@]+@[^\s@]+\.[^\s@]+$/';
+
+        // Validation
+        $errors = [];
+
+        // Name
+        if (!isset($inputs['name']) || strlen($inputs['name']) == 0) {
+            $errors[] = "Please enter name!";
+        } else if (!preg_match($preg_name, $inputs['name'])) {
+            $errors[] = "Name should only have alphabets and spaces!";
+        }
+
+        // Email
+        if (!isset($inputs['email']) || strlen($inputs['email']) == 0) {
+            $errors[] = "Please enter email!";
+        } else if (!preg_match($preg_email, $inputs['email'])) {
+            $errors[] = "Invalid email format!";
+        }
+
+        // Phone
+        if (!isset($inputs['phone']) || strlen(trim($inputs['phone'])) == 0) {
+            $errors[] = "Please enter phone!";
+        } else if (!preg_match($preg_numeric, $inputs['phone'])) {
+            $errors[] = "Phone must be numbers only!";
+        } else if (strlen($inputs['phone']) < 10) {
+            $errors[] = "Phone must have at least 10 digits!";
+        }
+
+        // Address
+        if (!isset($inputs['address']) || strlen($inputs['address']) == 0) {
+            $errors[] = "Please enter address!";
+        }
+
+        // Enquiry For
+        if (!isset($inputs['enquiry_for']) || strlen($inputs['enquiry_for']) == 0) {
+            $errors[] = "Please enter enquiry!";
+        }
+
+        // Given Date
+        if (!isset($inputs['given_date']) || strlen($inputs['given_date']) == 0) {
+            $errors[] = "Please select date!";
+        }
+
+        // Status
+        if (!isset($inputs['status']) || strlen($inputs['status']) == 0) {
+            $errors[] = "Please select status!";
+        }
+
+        // Type
+        if (!isset($inputs['type']) || strlen($inputs['type']) == 0) {
+            $errors[] = "Please select type!";
+        }
+
+        // If any errors, return immediately
+        if (count($errors) > 0) {
+            $this->response['msg'] = 'error';
+            $this->response['code'] = "1";
+            $this->response['data'] = $errors;
+            return $this->response;
+        }
+
+        // Populate model
         foreach ($this->columns as $column) {
             $index = str_replace('lead_', "", $column);
-            if ($index != 'indx')
+            if ($index != 'indx') {
                 $this->model->{$column} = isset($inputs[$index]) ? $inputs[$index] : null;
+            }
         }
 
         $this->model->lead_id = "LED" . AppGlobals::autoKey($this->model);
-        $this->model->lead_status = isset($inputs['status']) ? $inputs['status'] : 'new';
+        $this->model->lead_status = isset($inputs['status']) ? $inputs['status'] : 'In Progress';
+        $this->model->lead_type = isset($inputs['type']) ? $inputs['type'] : 'Hot';
+        $this->model->lead_given_date = isset($inputs['given_date']) && !empty($inputs['given_date']) ? date('Y-m-d', strtotime($inputs['given_date'])) : '';
 
+        // Save
         if ($this->model->save()) {
             $this->model->refresh();
             $this->response['msg'] = 'success';
@@ -83,7 +159,7 @@ class LeadsService {
         } else {
             $this->response['msg'] = 'error';
             $this->response['code'] = "2";
-            $this->response['data'] = "error";
+            $this->response['data'] = "Failed to create lead.";
         }
 
         return $this->response;
@@ -108,10 +184,89 @@ class LeadsService {
             return $this->response;
         }
 
+        // Sanitize inputs
+        foreach ($inputs as $k => $v) {
+            if (is_string($v)) {
+                $inputs[$k] = trim(strip_tags($v));
+            }
+        }
+
+        // Regex
+        $preg_name = '/^[a-zA-Z ]+$/';
+        $preg_numeric = '/^[0-9]+$/';
+        $preg_email = '/^[^\s@]+@[^\s@]+\.[^\s@]+$/';
+
+        // Validation
+        $errors = [];
+
+        if (isset($inputs['name']) && strlen($inputs['name']) > 0) {
+            if (!preg_match($preg_name, $inputs['name'])) {
+                $errors[] = "Name should only have alphabets and spaces!";
+            }
+        } else {
+            $errors[] = "Please enter name!";
+        }
+
+        if (isset($inputs['email']) && strlen($inputs['email']) > 0) {
+            if (!preg_match($preg_email, $inputs['email'])) {
+                $errors[] = "Invalid email format!";
+            }
+        } else {
+            $errors[] = "Please enter email!";
+        }
+
+        if (isset($inputs['phone']) && strlen(trim($inputs['phone'])) > 0) {
+            if (!preg_match($preg_numeric, $inputs['phone'])) {
+                $errors[] = "Phone must be numbers only!";
+            } elseif (strlen($inputs['phone']) < 10) {
+                $errors[] = "Phone must have at least 10 digits!";
+            }
+        } else {
+            $errors[] = "Please enter phone!";
+        }
+
+        if (!isset($inputs['address']) || strlen($inputs['address']) == 0) {
+            $errors[] = "Please enter address!";
+        }
+
+        if (!isset($inputs['enquiry_for']) || strlen($inputs['enquiry_for']) == 0) {
+            $errors[] = "Please enter enquiry!";
+        }
+
+        if (!isset($inputs['given_date']) || strlen($inputs['given_date']) == 0) {
+            $errors[] = "Please select date!";
+        }
+
+        if (!isset($inputs['status']) || strlen($inputs['status']) == 0) {
+            $errors[] = "Please select status!";
+        }
+
+        if (!isset($inputs['type']) || strlen($inputs['type']) == 0) {
+            $errors[] = "Please select type!";
+        }
+
+        // If any errors
+        if (count($errors) > 0) {
+            $this->response['msg'] = 'error';
+            $this->response['code'] = "1";
+            $this->response['data'] = $errors;
+            return $this->response;
+        }
+
+        // Update values
         foreach ($this->columns as $column) {
             $index = str_replace('lead_', "", $column);
-            if ($index != 'indx')
-                $this->model->{$column} = isset($inputs[$index]) ? $inputs[$index] : $this->model->{$column};
+
+            if ($index != 'indx') {
+                if (isset($inputs[$index])) {
+                    $this->model->{$column} = $inputs[$index];
+                }
+            }
+        }
+
+        // Ensure given_date formatted
+        if (isset($inputs['given_date'])) {
+            $this->model->lead_given_date = date('Y-m-d', strtotime($inputs['given_date']));
         }
 
         if ($this->model->update()) {
@@ -122,7 +277,7 @@ class LeadsService {
         } else {
             $this->response['msg'] = 'error';
             $this->response['code'] = "2";
-            $this->response['data'] = "error";
+            $this->response['data'] = "Failed to update lead.";
         }
 
         return $this->response;
@@ -163,34 +318,38 @@ class LeadsService {
         $type = isset($inputs['type']) ? $inputs['type'] : '';
         $assigned_user = isset($inputs['assigned_user']) ? $inputs['assigned_user'] : '';
         $key = isset($inputs['key']) ? $inputs['key'] : '';
+        $start_date = isset($inputs['start_date']) ? $inputs['start_date'] : '';
+        $end_date = isset($inputs['end_date']) ? $inputs['end_date'] : '';
 
         $query = Leads::select('*')->where('lead_delete', '=', 'N');
 
         if ($search !== '') {
             $query->where(function ($builder) use ($search) {
-                $builder->where("lead_id", 'LIKE', "%{$search}%");
-                $builder->orWhere("lead_name", 'LIKE', "%{$search}%");
+                //$builder->where("lead_id", 'LIKE', "%{$search}%");
+                $builder->where("lead_name", 'LIKE', "%{$search}%");
                 $builder->orWhere("lead_phone", 'LIKE', "%{$search}%");
                 $builder->orWhere("lead_type", 'LIKE', "%{$search}%");
                 $builder->orWhere("lead_status", 'LIKE', "%{$search}%");
                 $builder->orWhere("lead_enquiry_for", 'LIKE', "%{$search}%");
             });
         }
-
         if ($status !== '') {
             $query->where('lead_status', 'LIKE', "{$status}");
         }
-
         if ($type !== '') {
             $query->where('lead_type', 'LIKE', "{$type}");
         }
-
         if ($key !== '') {
             $query->where('lead_id', 'LIKE', "{$key}");
         }
-
         if ($assigned_user !== '') {
             $query->where('lead_assigned_user', 'LIKE', "{$assigned_user}");
+        }
+        if ($start_date !== '') {
+            $query->where('lead_given_date', '>=', "{$start_date}");
+        }
+        if ($end_date !== '') {
+            $query->where('lead_given_date', 'LIKE', "{$end_date}");
         }
 
         $totalResults = $query->count();

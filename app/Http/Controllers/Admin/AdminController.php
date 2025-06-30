@@ -37,7 +37,7 @@ class AdminController extends Controller {
 
     public function __construct(Request $request) {
         $this->request = $request;
-        $this->response[ 'inputs' ] = $this->request->input();
+        $this->response['inputs'] = $this->request->input();
 
         view()->share('store_configs', [
             'name' => env('APP_NAME'),
@@ -72,7 +72,7 @@ class AdminController extends Controller {
     }
 
     public function leads_manage() {
-        $title = "Manage";
+        $title = "Total Leads";
 
         return view('admin.leads.manage', [
             'mode' => 'update',
@@ -80,8 +80,46 @@ class AdminController extends Controller {
         ]);
     }
 
+    public function leads_create() {
+        $title = "Create";
+
+        return view('admin.leads.create', [
+            'mode' => 'save',
+            'title' => $title,
+        ]);
+    }
+
+    public function leads_update() {
+        $key = isset($this->request->key) ? $this->request->key : '';
+        $title = "Update";
+
+        return view('admin.leads.create', [
+            'mode' => 'update',
+            'title' => $title,
+            'key' => $key,
+        ]);
+    }
+
     public function leads_total() {
-        $title = "Manage";
+        $title = "Total Leads";
+
+        return view('admin.leads.manage', [
+            'mode' => 'update',
+            'title' => $title,
+        ]);
+    }
+
+    public function leads_converted() {
+        $title = "Converted";
+
+        return view('admin.leads.manage', [
+            'mode' => 'update',
+            'title' => $title,
+        ]);
+    }
+
+    public function leads_not_interested() {
+        $title = "Not Interested";
 
         return view('admin.leads.manage', [
             'mode' => 'update',

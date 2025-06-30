@@ -34,7 +34,11 @@ Route::prefix('admin')->name('admin.')
             Route::get('users/{key}/update', [App\Http\Controllers\Admin\AdminController::class, 'users_update']);
 
             Route::get('leads', [App\Http\Controllers\Admin\AdminController::class, 'leads_manage'])->name('leads.manage');
+            Route::get('leads/create', [App\Http\Controllers\Admin\AdminController::class, 'leads_create'])->name('leads.create');
             Route::get('leads/total', [App\Http\Controllers\Admin\AdminController::class, 'leads_total'])->name('leads.total');
+            Route::get('leads/converted', [App\Http\Controllers\Admin\AdminController::class, 'leads_converted'])->name('leads.converted');
+            Route::get('leads/not-interested', [App\Http\Controllers\Admin\AdminController::class, 'leads_not_interested'])->name('leads.not-interested');
+            Route::get('leads/{key}/update', [App\Http\Controllers\Admin\AdminController::class, 'leads_update']);
         });
 
 Route::prefix('api/v1')->group(function () {
