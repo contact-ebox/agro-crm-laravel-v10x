@@ -228,15 +228,15 @@ globals.modules.attach(leads);
                         <path d="M12 16h.01"></path>
                     </svg>
                     <h3>Are you sure?</h3>
-                    <div class="text-secondary" v-if="selected_row.key != undefined">
+                    <div class="text-secondary" v-if="selected_row.id != undefined">
                         Do you really want to remove <b>@{{selected_row.title}}</b>? What you've done cannot be undone.
                     </div>
                 </div>
-                <div class="modal-footer" v-if="selected_row.key != undefined">
+                <div class="modal-footer" v-if="selected_row.id != undefined">
                     <div class="w-100">
                         <div class="row">
                             <div class="col"><a href="#" class="btn w-100" data-bs-dismiss="modal">Cancel</a></div>
-                            <div class="col"><a class="btn btn-danger w-100" onclick="users.delete()">Delete</a></div>
+                            <div class="col"><a class="btn btn-danger w-100" onclick="leads.delete()">Delete</a></div>
                         </div>
                     </div>
                 </div>

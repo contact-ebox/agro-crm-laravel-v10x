@@ -321,7 +321,7 @@ class LeadsService {
         $start_date = isset($inputs['start_date']) ? $inputs['start_date'] : '';
         $end_date = isset($inputs['end_date']) ? $inputs['end_date'] : '';
 
-        $query = Leads::select('*')->where('lead_delete', '=', 'N');
+        $query = Leads::select('*')->where('lead_delete', '=', AppGlobals::No);
 
         if ($search !== '') {
             $query->where(function ($builder) use ($search) {

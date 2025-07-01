@@ -59,7 +59,7 @@ var vueLeads = new Vue({
             let row = this.rows[indx];
 
             this.selected_row = row;
-            this.selected_key = row.key;
+            this.selected_key = row.id;
 
             $('#mdl_delete').modal('show');
         },
@@ -372,7 +372,7 @@ window.leads = {
             dataType: "json",
             success: function (resp, textStatus, jqXHR) {
                 if (resp['msg'] == 'success') {
-                    alert('Campaigns deleted!');
+                    alert('Lead deleted!');
                     vueLeads.$data.selected_key = '';
                     vueLeads.$data.selected_row = [];
                     $('#mdl_delete').modal('hide');
