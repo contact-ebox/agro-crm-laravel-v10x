@@ -349,7 +349,7 @@ class LeadsService {
             $query->where('lead_given_date', '>=', "{$start_date}");
         }
         if ($end_date !== '') {
-            $query->where('lead_given_date', 'LIKE', "{$end_date}");
+            $query->where('lead_given_date', '<=', "{$end_date}");
         }
 
         $totalResults = $query->count();
